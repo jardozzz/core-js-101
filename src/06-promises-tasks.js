@@ -5,7 +5,6 @@
  *                                                                                                *
  ************************************************************************************************ */
 
-
 /**
  * Return Promise object that is resolved with string value === 'Hooray!!! She said "Yes"!',
  * if boolean value === true is passed, resolved with string value === 'Oh no, she said "No".',
@@ -28,10 +27,14 @@
  *      .catch((error) => console.log(error.message)) // 'Error: Wrong parameter is passed!
  *                                                    //  Ask her again.';
  */
-function willYouMarryMe(/* isPositiveAnswer */) {
-  throw new Error('Not implemented');
+function willYouMarryMe(isPositiveAnswer) {
+  if (isPositiveAnswer === true) {
+    return Promise.resolve('Hooray!!! She said "Yes"!');
+  } if (isPositiveAnswer === false) {
+    return Promise.resolve('Oh no, she said "No".');
+  }
+  return Promise.reject(new Error('Wrong parameter is passed! Ask her again.'));
 }
-
 
 /**
  * Return Promise object that should be resolved with array containing plain values.
@@ -48,8 +51,8 @@ function willYouMarryMe(/* isPositiveAnswer */) {
  *    })
  *
  */
-function processAllPromises(/* array */) {
-  throw new Error('Not implemented');
+function processAllPromises(array) {
+  return Promise.all(array);
 }
 
 /**
@@ -71,8 +74,8 @@ function processAllPromises(/* array */) {
  *    })
  *
  */
-function getFastestPromise(/* array */) {
-  throw new Error('Not implemented');
+function getFastestPromise(array) {
+  return Promise.race(array);
 }
 
 /**
@@ -92,8 +95,17 @@ function getFastestPromise(/* array */) {
  *    });
  *
  */
-function chainPromises(/* array, action */) {
-  throw new Error('Not implemented');
+async function chainPromises(array, action) {
+  const a = [];
+
+  for (let i = 0; i < array.length; i += 1) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const q = await array[i];
+      a.push(q);
+    } catch (er) { a.push({ type: er }); }
+  }
+  return a.reduce((v, z) => action(v, z));
 }
 
 module.exports = {
